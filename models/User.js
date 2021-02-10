@@ -4,15 +4,26 @@ const config = require('../config/config');
 const {constants} = require('../config/constants');
 
 const userSchema = new mongoose.Schema({
-    username: {
+    email: {
         type: String,
         required: true,
         unique: true,
+        // validate: new RegExp('email_regex'),
+    },
+    fullName: {
+        type: String,
+        required: true,
     },
     password: {
         type: String,
         required: true,
-    }
+    },
+    offersBought: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Shoe'
+        }
+    ]
 });
 
 userSchema.pre('save', function (next) {

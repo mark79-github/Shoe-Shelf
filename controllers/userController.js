@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const {userService} = require('../services');
 const config = require('../config/config');
-const {msg}  = require('../config/constants');
+const {msg} = require('../config/constants');
 const {isGuest, isLogged, validate} = require('../middlewares');
 
 const router = Router();
@@ -14,14 +14,6 @@ router.post('/login', isGuest, validate.user.login, (req, res) => {
 
     const cookieOptions = {maxAge: 1000 * 60 * 60, httpOnly: true}
 
-    // try {
-    //     let token = userService.login(req.body);
-    //     res.cookie(config.authCookie, token, cookieOptions);
-    //     res.redirect('/products');
-    // } catch (error) {
-    //     res.render('users/login', {message: error.message});
-    // }
-
     userService.login(req.body)
         .then((token) => {
             if (!token) {
@@ -29,7 +21,7 @@ router.post('/login', isGuest, validate.user.login, (req, res) => {
             }
             return res
                 .cookie(config.authCookie, token, cookieOptions)
-                .redirect('/products');
+                .redirect('/shoes');
         })
         .catch((error) => {
             res.render('users/login', {message: error.message});
@@ -41,20 +33,28 @@ router.get('/register', isGuest, (req, res) => {
 });
 
 router.post('/register', isGuest, validate.user.register, (req, res) => {
-    // try {
-    //     await userService.register(req.body);
-    //     res.redirect('/users/login');
-    // } catch (err) {
-    //     res.render('users/register', {message: err.message});
-    // }
 
     userService.register(req.body)
         .then(() => {
             res.redirect('/users/login');
         })
         .catch(error => {
+            console.log(error.message);
             res.render('users/register', {message: error.message});
         });
+});
+
+router.get('/profile', (req, res, next) => {
+    const userId = req.user.id;
+    userService.getById(userId, true)
+        .then((user) => {
+            user.totalProfit = user.offersBought.reduce((acc, value) => {
+                acc += Number(value.price);
+                return acc;
+            }, 0);
+            res.render('users/profile', {...user});
+        })
+        .catch(next);
 });
 
 router.get('/logout', isLogged, (req, res) => {

@@ -12,7 +12,7 @@ module.exports = function () {
                 } else {
                     req.user = data;
                     res.locals.isLogged = !!data;
-                    res.locals.username = data.username;
+                    res.locals.fullName = data.fullName;
                 }
             });
         }
