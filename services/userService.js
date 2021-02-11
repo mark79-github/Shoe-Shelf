@@ -3,13 +3,11 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const {msg} = require('../config/constants');
 
-// const bcrypt = require('bcrypt');
-
-async function register(data) {
+function register(data) {
 
     const {email} = data;
 
-    await User.findOne({email})
+    User.findOne({email})
         .then((user) => {
             if (user) {
                 throw {message: msg.EMAIL_IS_IN_USE(email)}

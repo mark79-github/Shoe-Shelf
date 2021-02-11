@@ -1,7 +1,14 @@
 const {Shoe, User} = require('../models');
 
-function getAllShoes() {
-    return Shoe.find({}).sort({price: 1}).lean();
+async function getAllShoes() {
+    return Shoe.aggregate([{
+        $project: {
+            name: 1, price: 1, imageUrl: 1,
+            buyers_count: {
+                $size: '$buyers'
+            }
+        }
+    }]).sort({buyers_count: -1});
 }
 
 function getById(id, populateData) {

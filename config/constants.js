@@ -17,5 +17,9 @@ module.exports = {
         APPLICATION_RUNNING: (port) => {
             return `Application is up & listening on port ${port} ...`;
         },
+        EMAIL_MIN_LENGTH: 'Email must be at least 3 characters',
+        EMAIL_BAD_FORMAT: 'Invalid email format',
+        PASSWORD_MIN_LENGTH: 'Password must be at least 3 characters',
+        REPEAT_PASSWORD_NOT_EQUALS: 'Repeat password have to be equal to tha password',
     }
 }

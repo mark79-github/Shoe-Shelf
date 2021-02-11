@@ -9,8 +9,7 @@ router.get('/', (req, res, next) => {
         .then((shoes) => {
             res.render('home/home', {shoes});
         })
-        .catch(next)
-
+        .catch(next);
 });
 
 router.get('/create', (req, res) => {

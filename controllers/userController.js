@@ -12,13 +12,12 @@ router.get('/login', isGuest, (req, res) => {
 
 router.post('/login', isGuest, validate.user.login, (req, res) => {
 
-    const cookieOptions = {maxAge: 1000 * 60 * 60, httpOnly: true}
-
     userService.login(req.body)
         .then((token) => {
             if (!token) {
                 throw {message: msg.WRONG_CREDENTIALS};
             }
+            const cookieOptions = {maxAge: 1000 * 60 * 60, httpOnly: true}
             return res
                 .cookie(config.authCookie, token, cookieOptions)
                 .redirect('/shoes');
@@ -36,15 +35,15 @@ router.post('/register', isGuest, validate.user.register, (req, res) => {
 
     userService.register(req.body)
         .then(() => {
+            userService.login({email: req.body.email, password: req.body.password});
             res.redirect('/users/login');
         })
         .catch(error => {
-            console.log(error.message);
             res.render('users/register', {message: error.message});
         });
 });
 
-router.get('/profile', (req, res, next) => {
+router.get('/profile', isLogged, (req, res, next) => {
     const userId = req.user.id;
     userService.getById(userId, true)
         .then((user) => {

@@ -5,10 +5,10 @@
     </p>
     <form method="POST">
         <div>
-            <input type="email" name="email" placeholder="Email...">
+            <input type="email" name="email" placeholder="Email..." value="{{email}}">
         </div>
         <div>
-            <input type="text" name="fullName" placeholder="Full name...">
+            <input type="text" name="fullName" placeholder="Full name..." value="{{fullName}}">
         </div>
         <div>
             <input type="password" name="password" placeholder="Password">
@@ -17,7 +17,7 @@
             <input type="password" name="repeatPassword" placeholder="Re-password">
         </div>
         <div>
-            <p class="message"></p>
+            <p class="message">{{message}}</p>
             <button>Register</button>
         </div>
     </form>

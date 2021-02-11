@@ -1,38 +1,40 @@
 const {constants, msg} = require('../../config/constants');
+const validator = require('validator');
 
 module.exports = {
     user: {
         register(req, res, next) {
-            const {email, password, repeatPassword} = req.body;
+            let {email, password, repeatPassword, fullName} = req.body;
 
             let user = {
                 errors: [],
             };
 
-            user.email = email.trim();
+            email = validator.normalizeEmail(validator.trim(email))
 
-            // if (username.trim().length === 0 || username.trim().length < constants.USERNAME_MIN_LENGTH) {
-            //     user.errors.push(msg.USERNAME_MIN_LENGTH);
-            // } else {
-            //     user.username = username.trim();
-            // }
+            if (!validator.isLength(email, {min: constants.EMAIL_MIN_LENGTH})) {
+                user.errors.push(msg.EMAIL_MIN_LENGTH);
+            } else {
+                user.email = email;
+            }
 
-            // if (!constants.USERNAME_REGEX.test(username.trim())) {
-            //     user.errors.push(msg.USERNAME_ONLY_ALPHABETICAL);
-            //     user.username = undefined;
-            // }
+            if (!validator.isEmail(email)) {
+                user.errors.push(msg.EMAIL_BAD_FORMAT);
+                user.email = undefined;
+            }
 
-            if (password.trim().length === 0 || password.trim().length < constants.PASSWORD_MIN_LENGTH) {
+            password = validator.trim(password);
+            if (!validator.isLength(password, {min: constants.PASSWORD_MIN_LENGTH})) {
                 user.errors.push(msg.PASSWORD_MIN_LENGTH);
             }
 
-            if (password.trim() !== repeatPassword.trim()) {
-                user.errors.push(msg.CONFIRMATION_PASSWORD_ERROR);
+            repeatPassword = validator.trim(repeatPassword);
+            if (!validator.equals(password, repeatPassword)) {
+                user.errors.push(msg.REPEAT_PASSWORD_NOT_EQUALS);
             }
 
-            if (!constants.PASSWORD_REGEX.test(password.trim())) {
-                user.errors.push(msg.PASSWORD_ONLY_ALPHABETICAL);
-            }
+            fullName = validator.trim(fullName);
+            user.fullName = fullName;
 
             if (!user.errors.length) {
                 next();
@@ -42,26 +44,29 @@ module.exports = {
 
         },
         login(req, res, next) {
-            const {email, password} = req.body;
+            let {email, password} = req.body;
 
             let user = {
                 errors: [],
             };
 
-            // if (email.trim().length === 0 || email.trim().length < constants.EMAIL_MIN_LENGTH) {
-            //     user.errors.push();
-            // } else {
-            //     user.email = email.trim();
-            // }
-            //
-            // if (!constants.USERNAME_REGEX.test(username.trim())) {
-            //     user.errors.push(msg.USERNAME_ONLY_ALPHABETICAL);
-            //     user.username = undefined;
-            // }
-            //
-            // if (password.trim().length === 0 || password.trim().length < constants.PASSWORD_MIN_LENGTH) {
-            //     user.errors.push(msg.PASSWORD_MIN_LENGTH);
-            // }
+            email = validator.normalizeEmail(validator.trim(email))
+
+            if (!validator.isLength(email, {min: constants.EMAIL_MIN_LENGTH})) {
+                user.errors.push(msg.EMAIL_MIN_LENGTH);
+            } else {
+                user.email = email;
+            }
+
+            if (!validator.isEmail(email)) {
+                user.errors.push(msg.EMAIL_BAD_FORMAT);
+                user.email = undefined;
+            }
+
+            password = validator.trim(password);
+            if (!validator.isLength(password, {min: constants.PASSWORD_MIN_LENGTH})) {
+                user.errors.push(msg.PASSWORD_MIN_LENGTH);
+            }
 
             if (!user.errors.length) {
                 next();
