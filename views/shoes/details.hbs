@@ -17,8 +17,11 @@
                 <a href="/shoes/edit/{{_id}}">Edit</a>
                 <a href="/shoes/delete/{{_id}}">Delete</a>
             {{else}}
-                <a href="/shoes/buy/{{_id}}">Buy</a>
-                <span>You bought it</span>
+                {{#if isBought}}
+                    <span>You bought it</span>
+                {{else}}
+                    <a href="/shoes/buy/{{_id}}">Buy</a>
+                {{/if}}
             {{/if}}
         </div>
     </div>

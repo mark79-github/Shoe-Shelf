@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
         shoeService.getById(req.params.shoeId, false)
             .then((shoe) => {
                 res.locals.isCreator = shoe.creator.toString() === req.user.id.toString();
-                console.log('isCreator', res.locals.isCreator);
+                res.locals.isBought = shoe.buyers.some(value => value._id.toString() === req.user.id.toString());
             })
             .catch((error) => next(error));
     }

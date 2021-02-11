@@ -1,7 +1,7 @@
 const {Shoe, User} = require('../models');
 
 function getAllShoes() {
-    return Shoe.find({}).lean();
+    return Shoe.find({}).sort({price: 1}).lean();
 }
 
 function getById(id, populateData) {

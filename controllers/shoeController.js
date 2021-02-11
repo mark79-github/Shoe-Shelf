@@ -2,12 +2,11 @@ const {Router} = require('express');
 const router = Router();
 
 const {shoeService} = require('../services');
-const {isCreator} = require('../middlewares');
+const {isCreator, isLogged} = require('../middlewares');
 
 router.get('/', (req, res, next) => {
     shoeService.getAllShoes()
         .then((shoes) => {
-            console.log(shoes);
             res.render('home/home', {shoes});
         })
         .catch(next)
@@ -31,7 +30,6 @@ router.get('/details/:shoeId', isCreator, (req, res, next) => {
     const shoeId = req.params.shoeId;
     shoeService.getById(shoeId, false)
         .then((shoe) => {
-            console.log(res.isCreator);
             res.render('shoes/details', shoe);
         })
         .catch(next);

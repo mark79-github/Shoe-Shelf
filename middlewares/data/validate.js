@@ -5,8 +5,6 @@ module.exports = {
         register(req, res, next) {
             const {email, password, repeatPassword} = req.body;
 
-            console.log(req.body);
-
             let user = {
                 errors: [],
             };
