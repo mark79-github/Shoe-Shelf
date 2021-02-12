@@ -1,6 +1,6 @@
 let {shoeService} = require('../../services');
 
-module.exports = async (req, res, next) => {
+module.exports = (req, res, next) => {
     if (req.user) {
         shoeService.getById(req.params.shoeId, false)
             .then((shoe) => {

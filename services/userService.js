@@ -3,11 +3,11 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const {msg} = require('../config/constants');
 
-function register(data) {
+async function register(data) {
 
     const {email} = data;
 
-    User.findOne({email})
+    await User.findOne({email})
         .then((user) => {
             if (user) {
                 throw {message: msg.EMAIL_IS_IN_USE(email)}

@@ -2,12 +2,12 @@ const {Router} = require('express');
 const router = Router();
 
 const {shoeService} = require('../services');
-const {isCreator, isLogged} = require('../middlewares');
+const {isCreator, validate} = require('../middlewares');
 
 router.get('/', (req, res, next) => {
     shoeService.getAllShoes()
         .then((shoes) => {
-            res.render('home/home', {shoes});
+            res.render('home/user', {shoes});
         })
         .catch(next);
 });
@@ -16,7 +16,7 @@ router.get('/create', (req, res) => {
     res.render('shoes/create');
 });
 
-router.post('/create', (req, res, next) => {
+router.post('/create', validate.shoe.create, (req, res, next) => {
     const userId = req.user.id;
     shoeService.create(req.body, userId)
         .then(() => {
@@ -29,7 +29,7 @@ router.get('/details/:shoeId', isCreator, (req, res, next) => {
     const shoeId = req.params.shoeId;
     shoeService.getById(shoeId, false)
         .then((shoe) => {
-            res.render('shoes/details', shoe);
+            res.render('shoes/details', {...shoe, price: `${shoe.price.toFixed(2)}`});
         })
         .catch(next);
 });
@@ -38,12 +38,12 @@ router.get('/edit/:shoeId', (req, res, next) => {
     const shoeId = req.params.shoeId;
     shoeService.getById(shoeId, false)
         .then((shoe) => {
-            res.render('shoes/edit', {...shoe});
+            res.render('shoes/edit', {...shoe, price: `${shoe.price.toFixed(2)}`});
         })
         .catch(next);
 });
 
-router.post('/edit/:shoeId', (req, res, next) => {
+router.post('/edit/:shoeId', validate.shoe.edit, (req, res, next) => {
     const shoeId = req.params.shoeId;
     shoeService.update(shoeId, req.body)
         .then((shoe) => {

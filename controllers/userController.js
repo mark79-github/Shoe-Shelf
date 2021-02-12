@@ -11,16 +11,13 @@ router.get('/login', isGuest, (req, res) => {
 });
 
 router.post('/login', isGuest, validate.user.login, (req, res) => {
-
+    const cookieOptions = {maxAge: 1000 * 60 * 60, httpOnly: true}
     userService.login(req.body)
         .then((token) => {
             if (!token) {
                 throw {message: msg.WRONG_CREDENTIALS};
             }
-            const cookieOptions = {maxAge: 1000 * 60 * 60, httpOnly: true}
-            return res
-                .cookie(config.authCookie, token, cookieOptions)
-                .redirect('/shoes');
+            return res.cookie(config.authCookie, token, cookieOptions).redirect('/');
         })
         .catch((error) => {
             res.render('users/login', {message: error.message});
@@ -35,7 +32,6 @@ router.post('/register', isGuest, validate.user.register, (req, res) => {
 
     userService.register(req.body)
         .then(() => {
-            userService.login({email: req.body.email, password: req.body.password});
             res.redirect('/users/login');
         })
         .catch(error => {
@@ -51,7 +47,10 @@ router.get('/profile', isLogged, (req, res, next) => {
                 acc += Number(value.price);
                 return acc;
             }, 0);
-            res.render('users/profile', {...user});
+            res.render('users/profile', {
+                ...user,
+                totalProfit: `${user.totalProfit.toFixed(2)}`
+            });
         })
         .catch(next);
 });

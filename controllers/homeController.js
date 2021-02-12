@@ -1,8 +1,10 @@
 const {Router} = require('express');
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.redirect('/shoes')
+const {isGuest} = require('../middlewares');
+
+router.get('/', isGuest, (req, res) => {
+    res.render('home/guest');
 });
 
 module.exports = router;
