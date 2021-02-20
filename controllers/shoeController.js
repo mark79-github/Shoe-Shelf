@@ -7,6 +7,9 @@ const {isCreator, validate} = require('../middlewares');
 router.get('/', (req, res, next) => {
     shoeService.getAllShoes()
         .then((shoes) => {
+            if (shoes) {
+                shoes.map(x => x.price = x.price.toFixed(2));
+            }
             res.render('home/user', {shoes});
         })
         .catch(next);
